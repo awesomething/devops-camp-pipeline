@@ -34,18 +34,13 @@ try:
     hashTag = hashTagResp.json()[0]['name']
     harborDbHash, harborPipelineHash = hashTag.split('-')
 
-    ## Initialize image scanner ##
+        ## Initialize image scanner ##
     urlScanInit = urlArtifact + artifactReference + '/scan'
     scanInitResp = requests.post(urlScanInit, data={}, auth=(username, password))
     if scanInitResp.status_code != 202:
     print('Failed to scan image')
     print('Server response code:', scanInitResp.status_code)
     sys.exit(-1)
-
-        if harborDbHash != pipelineDbHash:
-            print('true')
-        else:
-            print('false')
 
     ## Checks scanner status ##
     urlScanOverview = urlArtifact + artifactReference + '?with_scan_overview=true'
@@ -67,6 +62,12 @@ try:
         time.sleep(4)
 
     print(json.dumps(scanOverviewResult['summary'], indent=4))
+
+    if harborDbHash != pipelineDbHash:
+        print('true')
+    else:
+        print('false')
+
 ## Build DB when image doesn't exist or something goes wrong ##
 except:
     print('true')
